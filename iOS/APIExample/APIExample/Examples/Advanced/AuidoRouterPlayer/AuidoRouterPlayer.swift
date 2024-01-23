@@ -27,6 +27,8 @@ class AuidoRouterPlayerEntry : UIViewController
     var width:Int = 960, height:Int = 540, orientation:AgoraVideoOutputOrientationMode = .adaptative, fps = 15
     private var playerType: ThirdPlayerType = .ijk
     
+    @IBOutlet weak var defaultJoinChannel: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -113,7 +115,8 @@ class AuidoRouterPlayerEntry : UIViewController
                                      "resolution":CGSize(width: width, height: height),
                                      "fps": fps,
                                      "orientation": orientation,
-                                     "playerType": playerType.rawValue]
+                                     "playerType": playerType.rawValue,
+                                     "defaultJoinChannel": self.defaultJoinChannel.isOn]
         navigationController?.pushViewController(newViewController, animated: true)
     }
 }
@@ -121,6 +124,8 @@ class AuidoRouterPlayerEntry : UIViewController
 class AuidoRouterPlayerMain: BaseViewController {
     var localVideo = Bundle.loadVideoView(type: .local, audioOnly: false)
     var remoteVideo = Bundle.loadVideoView(type: .remote, audioOnly: false)
+    
+    @IBOutlet weak var joinChannel: UIButton!
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var speakerSwitch: UISwitch!
     @IBOutlet weak var container: AGEVideoContainer!
@@ -210,6 +215,18 @@ class AuidoRouterPlayerMain: BaseViewController {
         // 2. If app certificate is turned on at dashboard, token is needed
         // when joining channel. The channel name and uid used to calculate
         // the token has to match the ones used for channel join
+        guard let defaultJoinChannel = configs["defaultJoinChannel"] as? Bool else {return}
+        if defaultJoinChannel {
+            self.agoraJoinchannel()
+            self.joinChannel.isEnabled = false;
+        }
+    }
+    
+    func agoraJoinchannel() {
+        guard let channelName = configs["channelName"] as? String,
+            let resolution = configs["resolution"] as? CGSize,
+            let fps = configs["fps"] as? Int,
+            let orientation = configs["orientation"] as? AgoraVideoOutputOrientationMode else {return}
         let option = AgoraRtcChannelMediaOptions()
         option.publishCameraTrack = GlobalSettings.shared.getUserRole() == .broadcaster
         option.publishMicrophoneTrack = GlobalSettings.shared.getUserRole() == .broadcaster
@@ -225,7 +242,12 @@ class AuidoRouterPlayerMain: BaseViewController {
             }
         })
     }
-
+    @IBAction func joinChannel(_ sender: UIButton) {
+  
+        self.agoraJoinchannel()
+        
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let playerType = ThirdPlayerType(rawValue: configs["playerType"] as! String)
