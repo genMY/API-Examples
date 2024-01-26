@@ -9,10 +9,13 @@ import UIKit
 import AGEVideoLayout
 import AgoraRtcKit
 import IJKMediaFramework
+import WebKit
 
 enum ThirdPlayerType: String {
     case ijk = "ijkplayer"
     case origin = "avplayer"
+    case wkweb = "wkweb"
+    case uiweb = "uiweb"
 }
 
 class AuidoRouterPlayerEntry : UIViewController
@@ -40,6 +43,8 @@ class AuidoRouterPlayerEntry : UIViewController
                                       preferredStyle: UIDevice.current.userInterfaceIdiom == .pad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet)
         alert.addAction(getPlayerAction(ThirdPlayerType.ijk.rawValue))
         alert.addAction(getPlayerAction(ThirdPlayerType.origin.rawValue))
+        alert.addAction(getPlayerAction(ThirdPlayerType.wkweb.rawValue))
+        alert.addAction(getPlayerAction(ThirdPlayerType.uiweb.rawValue))
         alert.addCancelAction()
         present(alert, animated: true, completion: nil)
     }
@@ -129,6 +134,8 @@ class AuidoRouterPlayerMain: BaseViewController {
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var speakerSwitch: UISwitch!
     @IBOutlet weak var container: AGEVideoContainer!
+    var wkwebView: WKWebView!
+    let uiwebView = UIWebView()
     var agoraKit: AgoraRtcEngineKit!
     private let videoString = "https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/resources/sample.mp4"
     private lazy var ijkPlayer: IJKAVMoviePlayerController? = {
@@ -156,6 +163,38 @@ class AuidoRouterPlayerMain: BaseViewController {
         return playerVC
     }()
     
+    func loadWKWebView() {
+        // Set the frame
+        let configuration = WKWebViewConfiguration()
+        configuration.allowsInlineMediaPlayback = true
+       
+        configuration.requiresUserActionForMediaPlayback = false
+        
+        wkwebView = WKWebView(frame: playerView.bounds, configuration: configuration)
+        
+        // Add the webView to the view hierarchy
+        playerView.addSubview(wkwebView)
+       
+        
+        
+        // Load a URL
+        if let url = URL(string: "https://fullapp.oss-cn-beijing.aliyuncs.com/agora-video-test/index.html") {
+            let request = URLRequest(url: url)
+            wkwebView.load(request)
+        }
+    }
+    func loadUIWebView() {
+
+        // Set the frame
+        uiwebView.frame = playerView.bounds
+        // Add the webView to the view hierarchy
+        uiwebView.addSubview(playerView)
+        // Load a URL
+        if let url = URL(string: "https://fullapp.oss-cn-beijing.aliyuncs.com/agora-video-test/index.html") {
+            let request = URLRequest(url: url)
+            uiwebView.loadRequest(request)
+        }
+    }
     // indicate if current instance has joined channel
     var isJoined: Bool = false
     
@@ -253,8 +292,10 @@ class AuidoRouterPlayerMain: BaseViewController {
         let playerType = ThirdPlayerType(rawValue: configs["playerType"] as! String)
         if playerType == .ijk {
             setupIJKPlayer()
-        } else {
+        } else if playerType == .origin{
             setupAVPlayer()
+        }else {
+            loadWKWebView()
         }
     }
     
@@ -270,6 +311,12 @@ class AuidoRouterPlayerMain: BaseViewController {
 
     @IBAction func onSpeakerSwitch(_ sender: UISwitch) {
         agoraKit.setEnableSpeakerphone(sender.isOn)
+        let audioSession: AVAudioSession = AVAudioSession.sharedInstance()
+                do {
+                    try audioSession.setActive(true)
+                } catch let error {
+                    debugPrint("Couldn't force audio to speaker: \(error)")
+                }
     }
     
     deinit {
@@ -286,7 +333,7 @@ class AuidoRouterPlayerMain: BaseViewController {
         let playerType = ThirdPlayerType(rawValue: configs["playerType"] as! String)
         if playerType == .origin {
             avPlayer?.player?.pause()
-        } else {
+        } else{
             ijkPlayer?.shutdown()
         }
     }
