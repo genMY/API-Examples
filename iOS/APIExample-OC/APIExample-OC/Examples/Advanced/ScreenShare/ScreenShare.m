@@ -50,6 +50,8 @@
 @property (nonatomic, strong)NSDictionary *scenarioTypeDataSources;
 @property (nonatomic, strong)RPSystemBroadcastPickerView *systemBroadcastPicker;
 
+@property(nonatomic,assign) BOOL bitrateDefault;
+
 @end
 
 @implementation ScreenShare
@@ -105,7 +107,8 @@
         AgoraScreenVideoParameters *videoParams = [[AgoraScreenVideoParameters alloc] init];
         videoParams.dimensions = [self screenShareVideoDimension];
         videoParams.frameRate = AgoraVideoFrameRateFps15;
-        videoParams.bitrate = AgoraVideoBitrateStandard;
+        videoParams.bitrate = self.bitrateDefault == true ? AgoraVideoBitrateStandard : 1024;
+        videoParams.contentHint = AgoraVideoContentHintMotion;
     }
     return _screenParams;
 }
@@ -127,6 +130,7 @@
     [self.remoteView setPlaceholder:@"Remote Host".localized];
     [self.containerView layoutStream:@[self.localView, self.remoteView]];
     
+    self.bitrateDefault = true;
     // set up agora instance when view loaded
     AgoraRtcEngineConfig *config = [[AgoraRtcEngineConfig alloc] init];
     config.appId = KeyCenter.AppId;
@@ -141,7 +145,7 @@
     [self.agoraKit enableAudio];
     [self.agoraKit enableVideo];
     
-    AgoraVideoEncoderConfiguration *encoderConfig = [[AgoraVideoEncoderConfiguration alloc] initWithSize:CGSizeMake(960, 540)
+    AgoraVideoEncoderConfiguration *encoderConfig = [[AgoraVideoEncoderConfiguration alloc] initWithSize:CGSizeMake(1920, 1080)
                                                                                                frameRate:(AgoraVideoFrameRateFps15)
                                                                                                  bitrate:15
                                                                                          orientationMode:(AgoraVideoOutputOrientationModeFixedPortrait)
@@ -184,16 +188,27 @@
 
 - (CGSize)screenShareVideoDimension {
     CGSize screenSize = UIScreen.mainScreen.bounds.size;
-    CGSize boundingSize = CGSizeMake(540, 960);
-    CGFloat mW = boundingSize.width / screenSize.width;
-    CGFloat mH = boundingSize.height / screenSize.height;
-    if (mH < mW) {
-        boundingSize.width = boundingSize.height / screenSize.height * screenSize.width;
-    } else if (mW < mH) {
-        boundingSize.height = boundingSize.width / screenSize.width * screenSize.height;
-    }
+    CGSize boundingSize = CGSizeMake(1920, 1080);
+//    CGFloat mW = boundingSize.width / screenSize.width;
+//    CGFloat mH = boundingSize.height / screenSize.height;
+//    if (mH < mW) {
+//        boundingSize.width = boundingSize.height / screenSize.height * screenSize.width;
+//    } else if (mW < mH) {
+//        boundingSize.height = boundingSize.width / screenSize.width * screenSize.height;
+//    }
     return boundingSize;
 }
+
+- (IBAction)screenVideobitrate:(UIButton *)sender {
+    self.bitrateDefault = false;
+    
+}
+- (IBAction)screenDefaultVideobitrate:(UIButton *)sender {
+    
+    self.bitrateDefault = true;
+}
+
+
 
 - (IBAction)clickCaptureAudio:(UISwitch *)sender {
     self.screenParams.captureAudio = sender.isOn;

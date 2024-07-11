@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -277,6 +277,17 @@
                                     <action selector="onTakeSnapshot:" destination="jxp-ZN-2yG" eventType="touchUpInside" id="B4X-AK-dYt"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="质量" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YsM-Rt-Xeh">
+                                <rect key="frame" x="10" y="240" width="300" height="81"/>
+                                <color key="backgroundColor" systemColor="placeholderTextColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="ssj-KB-hX3"/>
+                                    <constraint firstAttribute="height" constant="81" id="y8T-36-ANo"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="systemRedColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wts-5Z-p7a" userLabel="UltraLowLatency">
                                 <rect key="frame" x="20" y="614" width="195.5" height="44"/>
                                 <subviews>
@@ -330,6 +341,7 @@
                             <constraint firstItem="Uwe-Fi-04a" firstAttribute="leading" secondItem="CeS-QQ-Djo" secondAttribute="leading" constant="20" id="0oI-Iz-1eG"/>
                             <constraint firstItem="w4q-aT-JBc" firstAttribute="leading" secondItem="CeS-QQ-Djo" secondAttribute="leading" constant="20" id="0za-L8-AHw"/>
                             <constraint firstItem="XSO-cE-x5n" firstAttribute="top" secondItem="CeS-QQ-Djo" secondAttribute="top" constant="10" id="1HU-w7-YYi"/>
+                            <constraint firstItem="YsM-Rt-Xeh" firstAttribute="leading" secondItem="CeS-QQ-Djo" secondAttribute="leading" constant="10" id="3hS-Xt-UZG"/>
                             <constraint firstItem="q9v-1n-ZYf" firstAttribute="top" secondItem="CeS-QQ-Djo" secondAttribute="top" id="7Ra-XK-uPS"/>
                             <constraint firstItem="sOi-ZR-6Oj" firstAttribute="top" secondItem="b7R-QN-CCh" secondAttribute="bottom" constant="35" id="Fn8-02-ePb"/>
                             <constraint firstItem="w4q-aT-JBc" firstAttribute="top" secondItem="i5U-ta-1hj" secondAttribute="bottom" constant="10" id="GpK-P5-Dz2"/>
@@ -337,6 +349,7 @@
                             <constraint firstItem="q9v-1n-ZYf" firstAttribute="leading" secondItem="CeS-QQ-Djo" secondAttribute="leading" id="LsZ-af-6Wt"/>
                             <constraint firstItem="CeS-QQ-Djo" firstAttribute="bottom" secondItem="q9v-1n-ZYf" secondAttribute="bottom" id="Ne5-if-Q54"/>
                             <constraint firstItem="CeS-QQ-Djo" firstAttribute="bottom" secondItem="Uwe-Fi-04a" secondAttribute="bottom" constant="150" id="Nei-qd-Vd2"/>
+                            <constraint firstItem="YsM-Rt-Xeh" firstAttribute="top" secondItem="XSO-cE-x5n" secondAttribute="bottom" id="NtA-aU-yc9"/>
                             <constraint firstItem="XSO-cE-x5n" firstAttribute="width" secondItem="CeS-QQ-Djo" secondAttribute="width" multiplier="0.33" id="O1g-6R-UEF"/>
                             <constraint firstItem="i5U-ta-1hj" firstAttribute="top" secondItem="CN0-n0-1Gh" secondAttribute="bottom" constant="10" id="R0x-Bd-MjY"/>
                             <constraint firstItem="Wts-5Z-p7a" firstAttribute="top" secondItem="sOi-ZR-6Oj" secondAttribute="bottom" constant="8" symbolic="YES" id="aLT-2p-uy5"/>
@@ -361,6 +374,7 @@
                         <outlet property="dualStreamContainer" destination="sOi-ZR-6Oj" id="OJS-dO-Z66"/>
                         <outlet property="dualStreamTipsLabel" destination="fim-uQ-jK3" id="h1o-FC-wRu"/>
                         <outlet property="foregroundVideoContainer" destination="XSO-cE-x5n" id="boX-t1-3R9"/>
+                        <outlet property="networkLabel" destination="YsM-Rt-Xeh" id="YXb-DA-h14"/>
                         <outlet property="takeSnapshot" destination="w4q-aT-JBc" id="Upi-OZ-hQ8"/>
                         <outlet property="ultraLowLatencyToggle" destination="cbb-WI-53A" id="0lO-Eg-QAX"/>
                         <outlet property="ultraLowLatencyToggleView" destination="Wts-5Z-p7a" id="gaW-lX-ltT"/>
@@ -390,11 +404,17 @@
         <namedColor name="videoPlaceholder">
             <color red="0.47600001096725464" green="0.47600001096725464" blue="0.47600001096725464" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="placeholderTextColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

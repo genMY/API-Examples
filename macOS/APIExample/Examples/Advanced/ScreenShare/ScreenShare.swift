@@ -601,6 +601,10 @@ extension ScreenShare: AgoraRtcEngineDelegate {
         }
     }
     
+    func rtcEngine(_ engine: AgoraRtcEngineKit, networkQuality uid: UInt, txQuality: AgoraNetworkQuality, rxQuality: AgoraNetworkQuality) {
+        NSLog("networkQuality-----------------uid-- \(uid)-- tx-\(txQuality)--rx- \(rxQuality) ------")
+    }
+    
     /// callback when a remote user is leaving the channel, note audience in live broadcast mode will NOT trigger this event
     /// @param uid uid of remote joined user
     /// @param reason reason why this user left, note this event may be triggered when the remote user

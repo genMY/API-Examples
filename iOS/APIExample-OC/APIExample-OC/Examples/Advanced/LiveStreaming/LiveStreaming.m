@@ -129,6 +129,7 @@
 @property (nonatomic, strong) AgoraRtcEngineKit *agoraKit;
 @property (nonatomic, assign) BOOL isLocalVideoForeground;
 @property (nonatomic, assign) BOOL isUltraLowLatencyOn;
+@property (weak, nonatomic) IBOutlet UILabel *networkLabel;
 
 @end
 
@@ -269,6 +270,8 @@
     option.publishMicrophoneTrack = role == AgoraClientRoleBroadcaster;
     [self.agoraKit updateChannelWithMediaOptions:option];
 }
+
+
 
 - (void)becomeBroadcaster {
     // make myself a broadcaster
@@ -433,6 +436,11 @@
     [self.agoraKit setupRemoteVideo:videoCanvas];
     self.remoteView.uid = uid;
     self.remoteUid = uid;
+}
+
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine networkQuality:(NSUInteger)uid txQuality:(AgoraNetworkQuality)txQuality rxQuality:(AgoraNetworkQuality)rxQuality {
+    NSString *label = [NSString stringWithFormat:@"networkQuality-- uid- %ld---txQuality-- %lu----rxQuality---%lu",uid,txQuality,rxQuality];
+    self.networkLabel.text = label;
 }
 
 /// callback when a remote user is leaving the channel, note audience in live broadcast mode will NOT trigger this event
